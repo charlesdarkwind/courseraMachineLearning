@@ -39,10 +39,9 @@ grad = zeros(size(theta));
 h = sigmoid(X * theta);
 reg = (lambda/(2*m)) * sum(theta(2:end).^2); % no regularization on theta0
 J = (-y'*log(h)-(1-y)'*log(1-h)) / m + reg;
-g1 = (X' * (h - y)) / m;
-g2 = g1 + (lambda/m * theta);
-grad = [g1(1);g2(2:end)];
-
+temp = theta;
+temp(1) = 0; % because we don't add anything for j = 0
+grad = grad + (X' * (h - y)) / m + (lambda/m * temp);
 
 
 
