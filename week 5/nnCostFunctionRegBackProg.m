@@ -95,13 +95,18 @@ for t = 1:m
     d2 = (Theta2' * d3')' .* a_2 .* (1-a_2); % 26x1
     d2 = d2(2:end); % 1 x 25
                               % 10x1 * 1x26 = 10x26
-    Theta2_grad = Theta2_grad + (d3' * a_2) / m;
-                              % 25x1 * 1x401
-    Theta1_grad = Theta1_grad + (d2' * a_1) / m;
+    Theta2_grad = Theta2_grad + (d3' * a_2);
+                              % 25x1 * 1x401 = 25x401
+    Theta1_grad = Theta1_grad + (d2' * a_1);
 end
 
+% Regularize non-bias grads
+Theta2_grad = [Theta2_grad(:, 1)    Theta2_grad(:, 2:end) + lambda * Theta2(:, 2:end)] / m;
+Theta1_grad = [Theta1_grad(:, 1)    Theta1_grad(:, 2:end) + lambda * Theta1(:, 2:end)] / m;
 
 % cost function
+
+% Regularization term
 regTheta1 = sum(Theta1(:, 2:end).^2); % For each theta matrices, simply sum all their squared values
 regTheta2 = sum(Theta2(:, 2:end).^2);
 reg = (lambda/(2*m)) * (sum(regTheta1) + sum(regTheta2));
