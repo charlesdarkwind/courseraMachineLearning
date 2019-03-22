@@ -47,10 +47,12 @@ Theta_grad = zeros(size(Theta));
 
 
 % Vectorized
-pred = X  * Theta';
-errs = (pred - Y).^2;
-err = sum(0.5 * sum(errs .* R));
-J = J + err;
+h = (X*Theta'-Y).*R;
+term1 = lambda*(sum(sum(Theta.^2)))/2;
+term2 = lambda*(sum(sum(X.^2)))/2;
+J = sum(sum(h.^2))/2 + term1 + term2;
+X_grad = h*Theta + lambda*X;
+Theta_grad = h'*X + lambda*Theta;
 
 
 
